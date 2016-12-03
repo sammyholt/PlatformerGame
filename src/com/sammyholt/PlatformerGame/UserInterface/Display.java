@@ -45,22 +45,22 @@ public class Display {
 	 * This field represents an awt {@link Dimension} object with the
 	 * {@link #width} and {@link #height} fields as parameters.
 	 */
-	private Dimension dimension = new Dimension(width,height);
+	private Dimension dimension;
 	
 	/**
 	 * The default title for the {@link #frame}.
 	 */
-	private static String defaultTitle = "Platformer Game";
+	public static String defaultTitle = "Platformer Game";
 	
 	/**
 	 * The default width for the {@link #frame}.
 	 */
-	private static int defaultWidth = 800;
+	public static int defaultWidth = 800;
 	
 	/**
 	 * The default height for the {@link #frame}.
 	 */
-	private static int defaultHeight = 800;
+	public static int defaultHeight = 800;
 	
 	/**
 	 * The default constructor for the {@link Display}.
@@ -69,6 +69,9 @@ public class Display {
 		this.title = defaultTitle;
 		this.width = defaultWidth;
 		this.height = defaultHeight;
+		dimension = new Dimension(width, height);
+		
+		createDisplay();
 	}
 	
 	/**
@@ -82,6 +85,7 @@ public class Display {
 		this.title = title;
 		this.width = width;
 		this.height = height;
+		dimension = new Dimension(width, height);
 		
 		createDisplay();
 	}
@@ -100,7 +104,10 @@ public class Display {
 	 */
 	private void initializeFrame(){
 		frame = new JFrame(title);
-		frame.setSize(width, height);
+		frame.setSize(dimension);
+		frame.setPreferredSize(dimension);
+		frame.setMaximumSize(dimension);
+		frame.setMinimumSize(dimension);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
@@ -133,6 +140,13 @@ public class Display {
 	 */
 	public int getHeight(){
 		return this.height;
+	}
+	
+	/**
+	 * @return {@link #title} - The current title of this display.
+	 */
+	public String getTitle(){
+		return this.title;
 	}
 
 }

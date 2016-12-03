@@ -4,6 +4,12 @@ import com.sammyholt.PlatformerGame.*;
 
 public class UserInterface implements Runnable {
 	
+	private String title;
+	
+	private int width;
+	
+	private int height;
+	
 	/**
 	 * The main display for the game.
 	 */
@@ -23,7 +29,9 @@ public class UserInterface implements Runnable {
 	 * The default constructor.
 	 */
 	public UserInterface(){
-		display = new Display();
+		this.title = Display.defaultTitle;
+		this.width = Display.defaultWidth;
+		this.height = Display.defaultHeight;
 		game = new GameEngine();
 	}
 	
@@ -35,12 +43,14 @@ public class UserInterface implements Runnable {
 	 * @param height
 	 */
 	public UserInterface(String title, int width, int height){
-		display = new Display(title, width, height);
+		this.title = title;
+		this.width = width;
+		this.height = height;
 		game = new GameEngine();
 	}
 	
 	private void init(){
-		
+		display = new Display(title, width, height);
 	}
 	
 	private void render(){
@@ -56,21 +66,37 @@ public class UserInterface implements Runnable {
 
 	@Override
 	public void run() {
-		
 		init();
-		
+		gameLoop();
+		stop();
 	}
 	
+	/**
+	 * This method will start the {@link #thread}.
+	 */
 	public synchronized void start(){
-		thread = new Thread(this);
-		thread.start();
+		if(game.isRunning()){
+			// do nothing, already running
+		}else{
+			game.setRunning(true);
+			thread = new Thread(this);
+			thread.start();
+		}	
 	}
 	
+	/**
+	 * This method will stop the {@link #thread}.
+	 */
 	public synchronized void stop(){
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!game.isRunning()){
+			// do nothing, already stopped
+		}else{
+			game.setRunning(false);
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
