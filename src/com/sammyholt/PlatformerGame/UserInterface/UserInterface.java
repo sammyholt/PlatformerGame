@@ -2,13 +2,11 @@ package com.sammyholt.PlatformerGame.UserInterface;
 
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 
-import com.sammyholt.PlatformerGame.GameEngine;
 import com.sammyholt.PlatformerGame.UserInterface.gfx.Assets;
-import com.sammyholt.PlatformerGame.UserInterface.gfx.ImageLoader;
-import com.sammyholt.PlatformerGame.UserInterface.gfx.SpriteSheet;
+import com.sammyholt.PlatformerGame.input.KeyManager;
 import com.sammyholt.PlatformerGame.states.GameState;
+import com.sammyholt.PlatformerGame.states.MenuState;
 import com.sammyholt.PlatformerGame.states.State;
 
 public class UserInterface implements Runnable {
@@ -50,11 +48,6 @@ public class UserInterface implements Runnable {
 	private Thread thread;
 	
 	/**
-	 * The game used in this interface.
-	 */
-	private GameEngine game;
-	
-	/**
 	 * This represents the BufferStrategy of the UI.
 	 */
 	private BufferStrategy bs;
@@ -65,13 +58,25 @@ public class UserInterface implements Runnable {
 	private Graphics g;
 	
 	/**
+	 * A boolean value which represents if the game is running or not.
+	 */
+	private boolean running;
+	
+	// States
+	private State gameState;
+	private State menuState;
+	
+	// Input
+	private KeyManager keyManager;
+	
+	/**
 	 * The default constructor.
 	 */
 	public UserInterface(){
 		this.title = Display.defaultTitle;
 		this.width = Display.defaultWidth;
 		this.height = Display.defaultHeight;
-		game = new GameEngine();
+		keyManager = new KeyManager();
 	}
 	
 	/**
@@ -85,7 +90,7 @@ public class UserInterface implements Runnable {
 		this.title = title;
 		this.width = width;
 		this.height = height;
-		game = new GameEngine();
+		keyManager = new KeyManager();
 	}
 	
 	/**
@@ -93,12 +98,12 @@ public class UserInterface implements Runnable {
 	 */
 	private void init(){
 		display = new Display(title, width, height);
+		display.getFrame().addKeyListener(keyManager);
 		Assets.init();
 		
-		game.setGameState(new GameState());
-		game.setMenuState(new MenuState());
-		
-		State.setState(game.getGameState());
+		gameState = new GameState(this);
+		menuState = new MenuState(this);
+		State.setState(gameState);
 		
 	}
 	
@@ -129,6 +134,13 @@ public class UserInterface implements Runnable {
 		g.dispose();
 	}
 	
+	private void tick(){
+		keyManager.tick();
+		if(State.getState() != null){
+			State.getState().tick();
+		}
+	}
+	
 	/**
 	 * This method will clear the screen of all graphics.
 	 */
@@ -147,14 +159,14 @@ public class UserInterface implements Runnable {
 		long timer = 0;
 		long ticks = 0;
 		
-		while(game.isRunning()){
+		while(running){
 			now = System.nanoTime();
 			delta += (now - lastTime) / timePerTick;
 			timer += now - lastTime;
 			lastTime = now;
 			
 			if(delta >= 1){
-				game.tick();
+				tick();
 				render();
 				ticks++;
 				delta--;
@@ -183,10 +195,10 @@ public class UserInterface implements Runnable {
 	 * This method will start the {@link #thread}.
 	 */
 	public synchronized void start(){
-		if(game.isRunning()){
+		if(running){
 			// do nothing, already running
 		}else{
-			game.setRunning(true);
+			running = true;
 			thread = new Thread(this);
 			thread.start();
 		}	
@@ -196,16 +208,20 @@ public class UserInterface implements Runnable {
 	 * This method will stop the {@link #thread}.
 	 */
 	public synchronized void stop(){
-		if(!game.isRunning()){
+		if(!running){
 			// do nothing, already stopped
 		}else{
-			game.setRunning(false);
+			running = false;
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public KeyManager getKeyManager(){
+		return keyManager;
 	}
 
 }

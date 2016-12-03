@@ -122,6 +122,7 @@ public class Display {
 		canvas.setPreferredSize(dimension);
 		canvas.setMaximumSize(dimension);
 		canvas.setMinimumSize(dimension);
+		canvas.setFocusable(false);
 		
 		frame.add(canvas);
 		frame.pack();
@@ -155,6 +156,13 @@ public class Display {
 	 */
 	public Canvas getCanvas(){
 		return canvas;
+	}
+	
+	/**
+	 * @return {@link #frame} - The frame of the display.
+	 */
+	public JFrame getFrame(){
+		return frame;
 	}
 
 }
