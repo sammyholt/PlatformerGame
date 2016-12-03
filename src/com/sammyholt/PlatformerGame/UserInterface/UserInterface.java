@@ -8,6 +8,8 @@ import com.sammyholt.PlatformerGame.GameEngine;
 import com.sammyholt.PlatformerGame.UserInterface.gfx.Assets;
 import com.sammyholt.PlatformerGame.UserInterface.gfx.ImageLoader;
 import com.sammyholt.PlatformerGame.UserInterface.gfx.SpriteSheet;
+import com.sammyholt.PlatformerGame.states.GameState;
+import com.sammyholt.PlatformerGame.states.State;
 
 public class UserInterface implements Runnable {
 	
@@ -92,6 +94,12 @@ public class UserInterface implements Runnable {
 	private void init(){
 		display = new Display(title, width, height);
 		Assets.init();
+		
+		game.setGameState(new GameState());
+		game.setMenuState(new MenuState());
+		
+		State.setState(game.getGameState());
+		
 	}
 	
 	/**
@@ -110,7 +118,9 @@ public class UserInterface implements Runnable {
 		
 		// Drawing Starts
 		
-		g.drawImage(Assets.gmail, 60 ,60, null);
+		if(State.getState() != null){
+			State.getState().render(g);
+		}
 		
 		// End drawing
 		
