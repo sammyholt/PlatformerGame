@@ -148,5 +148,13 @@ public class Display {
 	public String getTitle(){
 		return this.title;
 	}
+	
+	/**
+	 * 
+	 * @return {@link #canvas} - The canvas held in the display frame.
+	 */
+	public Canvas getCanvas(){
+		return canvas;
+	}
 
 }

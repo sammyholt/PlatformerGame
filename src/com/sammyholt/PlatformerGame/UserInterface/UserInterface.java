@@ -1,13 +1,25 @@
 package com.sammyholt.PlatformerGame.UserInterface;
 
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+
 import com.sammyholt.PlatformerGame.*;
 
 public class UserInterface implements Runnable {
 	
+	/**
+	 * This field represents the title of the main window.
+	 */
 	private String title;
 	
+	/**
+	 * This field represents the width of the main window.
+	 */
 	private int width;
 	
+	/**
+	 * This field represents the height of the main window.
+	 */
 	private int height;
 	
 	/**
@@ -24,6 +36,10 @@ public class UserInterface implements Runnable {
 	 * The game used in this interface.
 	 */
 	private GameEngine game;
+	
+	private BufferStrategy bs;
+	
+	private Graphics g;
 	
 	/**
 	 * The default constructor.
@@ -53,17 +69,41 @@ public class UserInterface implements Runnable {
 		display = new Display(title, width, height);
 	}
 	
+	/**
+	 * Renders the game graphics out to the canvas.
+	 */
 	private void render(){
+		bs = display.getCanvas().getBufferStrategy();
+		if(bs == null){
+			display.getCanvas().createBufferStrategy(3);
+			return;
+		}
 		
+		g = bs.getDrawGraphics();
+		
+		// Drawing Starts
+		
+		g.fillRect(0, 0, display.getWidth(), display.getHeight());
+		
+		// End drawing
+		
+		bs.show();
+		g.dispose();
 	}
 	
+	/**
+	 * The main loop of the game.
+	 */
 	private void gameLoop(){
 		while(game.isRunning()){
 			game.tick();
 			render();
 		}
 	}
-
+	
+	/**
+	 * This method allows for the thread to be run.
+	 */
 	@Override
 	public void run() {
 		init();
