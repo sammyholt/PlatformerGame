@@ -1,30 +1,15 @@
 package com.sammyholt.PlatformerGame;
 
-import com.sammyholt.PlatformerGame.display.*;
-
 public class GameEngine {
 	
-	/**
-	 * The main display for the game.
-	 */
-	private Display display;
+	private boolean running;
 	
-	/**
-	 * The default constructor.
-	 */
-	public GameEngine(){
-		display = new Display();
+	public void tick(){
+		
 	}
 	
-	/**
-	 * The constructor which takes arguments for the main window.
-	 * 
-	 * @param title
-	 * @param width
-	 * @param height
-	 */
-	public GameEngine(String title, int width, int height){
-		display = new Display(title, width, height);
+	public boolean isRunning(){
+		return running;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.sammyholt.PlatformerGame.display;
+package com.sammyholt.PlatformerGame.UserInterface;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -118,6 +118,21 @@ public class Display {
 		
 		frame.add(canvas);
 		frame.pack();
+	}
+	
+	/**
+	 * 
+	 * @return {@link #width} - The current width value of this display.
+	 */
+	public int getWidth(){
+		return this.width;
+	}
+	
+	/**
+	 * @return {@link #height} - The current height value of this display.
+	 */
+	public int getHeight(){
+		return this.height;
 	}
 
 }

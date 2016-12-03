@@ -1,6 +1,6 @@
 package com.sammyholt.PlatformerGame;
 
-import com.sammyholt.PlatformerGame.display.*;
+import com.sammyholt.PlatformerGame.UserInterface.*;
 
 /**
  * This class holds the main method.
